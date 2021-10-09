@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useAuthDispatch } from "../../store/store";
 import { authActions } from "../../store/auth-slice";
+import { supabase } from "../helper/SupabaseClient";
 
 import classes from "./MainNavigation.module.css";
 
@@ -16,7 +17,12 @@ const MainNavigation = () => {
     router.push("/");
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      alert(error.message);
+      return;
+    }
     authDispatch(authActions.logout());
   };
 
