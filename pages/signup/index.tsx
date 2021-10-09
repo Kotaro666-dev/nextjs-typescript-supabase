@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 
 import {
+  isEmpty,
   validateEmail,
   validatePassword,
 } from "../../components/helper/ValidateInput";
 
 import classes from "./index.module.css";
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [inputName, setInputName] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
@@ -18,7 +20,11 @@ const SignIn: React.FC = () => {
   const onSubmitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
 
-    if (!validateEmail(inputEmail) || !validatePassword(inputPassword)) {
+    if (
+      isEmpty(inputName) ||
+      !validateEmail(inputEmail) ||
+      !validatePassword(inputPassword)
+    ) {
       console.log("Error");
       return;
     }
@@ -36,6 +42,12 @@ const SignIn: React.FC = () => {
     router.replace("/");
   };
 
+  const onChangeInputNameHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInputName(event.target.value);
+  };
+
   const onChangeInputEmailHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -50,6 +62,15 @@ const SignIn: React.FC = () => {
 
   return (
     <form onSubmit={onSubmitHandler} className={classes.form}>
+      <div>
+        <label>Name</label>
+        <input
+          type="text"
+          id="Name"
+          onChange={onChangeInputNameHandler}
+          value={inputName}
+        />
+      </div>
       <div>
         <label>Email</label>
         <input
@@ -75,4 +96,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
