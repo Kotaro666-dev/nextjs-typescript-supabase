@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useAuthDispatch } from "../../store/store";
 import { authActions } from "../../store/auth-slice";
+import { supabase } from "../../components/helper/SupabaseClient";
 
 import {
   isEmpty,
@@ -20,6 +21,38 @@ const SignUp: React.FC = () => {
   const router = useRouter();
   const authDispatch = useAuthDispatch();
 
+  const handleSignUp = async () => {
+    try {
+      setIsLoading(true);
+      const { user, error } = await supabase.auth.signUp({
+        email: inputEmail,
+        password: inputPassword,
+      });
+
+      if (error) {
+        console.log(error?.message);
+        alert(error.message);
+        return;
+      }
+
+      setIsLoading(false);
+
+      // Update store
+      authDispatch(authActions.signUp(user?.id));
+
+      alert("You successfully logged in.");
+
+      // reset Data
+      setInputEmail("");
+      setInputPassword("");
+
+      // Go back home
+      router.replace("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const onSubmitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
 
@@ -32,20 +65,7 @@ const SignUp: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
-    // Post data
-
-    setIsLoading(false);
-
-    // reset Data
-    setInputEmail("");
-    setInputPassword("");
-
-    // Update store
-    authDispatch(authActions.signIn("data"));
-
-    // Go back home
-    router.replace("/");
+    handleSignUp();
   };
 
   const onChangeInputNameHandler = (
