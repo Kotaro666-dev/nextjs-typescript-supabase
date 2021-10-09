@@ -6,6 +6,7 @@ import {
 } from "../../components/helper/ValidateInput";
 import { authActions } from "../../store/auth-slice";
 import { useAuthDispatch } from "../../store/store";
+import { supabase } from "../../components/helper/SupabaseClient";
 
 import classes from "./index.module.css";
 
@@ -17,6 +18,38 @@ const SignIn: React.FC = (props) => {
   const router = useRouter();
   const authDispatch = useAuthDispatch();
 
+  const handleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const { user, error } = await supabase.auth.signIn({
+        email: inputEmail,
+        password: inputPassword,
+      });
+
+      if (error) {
+        console.log(error?.message);
+        alert(error.message);
+        return;
+      }
+
+      setIsLoading(false);
+
+      // Update store
+      authDispatch(authActions.signIn(user?.id));
+
+      alert("You successfully logged in.");
+
+      // reset Data
+      setInputEmail("");
+      setInputPassword("");
+
+      // Go back home
+      router.replace("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const onSubmitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
 
@@ -25,20 +58,7 @@ const SignIn: React.FC = (props) => {
       return;
     }
 
-    setIsLoading(true);
-    // Post data
-
-    setIsLoading(false);
-
-    // reset Data
-    setInputEmail("");
-    setInputPassword("");
-
-    // Update store
-    authDispatch(authActions.signIn("data"));
-
-    // Go back home
-    router.replace("/");
+    handleSignIn();
   };
 
   const onChangeInputEmailHandler = (
