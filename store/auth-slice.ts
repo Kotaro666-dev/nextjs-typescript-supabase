@@ -1,15 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// const localStorageIdTokenKey = "idToken";
-// const initialIdTokenValue = localStorage.getItem(localStorageIdTokenKey);
-
-const initialIdTokenValue = "test";
-
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    idToken: initialIdTokenValue,
-    isLoggedIn: initialIdTokenValue ? true : false,
+    idToken: "",
+    isLoggedIn: false,
   },
   reducers: {
     signUp(state, action) {
