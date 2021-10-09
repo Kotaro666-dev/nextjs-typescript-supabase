@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useAuthDispatch } from "../../store/store";
+import { authActions } from "../../store/auth-slice";
 
 import {
   isEmpty,
@@ -16,6 +18,7 @@ const SignUp: React.FC = () => {
   const [inputPassword, setInputPassword] = useState("");
 
   const router = useRouter();
+  const authDispatch = useAuthDispatch();
 
   const onSubmitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
@@ -37,6 +40,9 @@ const SignUp: React.FC = () => {
     // reset Data
     setInputEmail("");
     setInputPassword("");
+
+    // Update store
+    authDispatch(authActions.signIn("data"));
 
     // Go back home
     router.replace("/");
@@ -83,7 +89,7 @@ const SignUp: React.FC = () => {
       <div>
         <label>Password</label>
         <input
-          type="text"
+          type="password"
           id="Password"
           onChange={onChangeInputPasswordHandler}
           value={inputPassword}

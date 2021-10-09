@@ -4,6 +4,8 @@ import {
   validateEmail,
   validatePassword,
 } from "../../components/helper/ValidateInput";
+import { authActions } from "../../store/auth-slice";
+import { useAuthDispatch } from "../../store/store";
 
 import classes from "./index.module.css";
 
@@ -13,6 +15,7 @@ const SignIn: React.FC = (props) => {
   const [inputPassword, setInputPassword] = useState("");
 
   const router = useRouter();
+  const authDispatch = useAuthDispatch();
 
   const onSubmitHandler = (event: React.FormEvent): void => {
     event.preventDefault();
@@ -30,6 +33,9 @@ const SignIn: React.FC = (props) => {
     // reset Data
     setInputEmail("");
     setInputPassword("");
+
+    // Update store
+    authDispatch(authActions.signIn("data"));
 
     // Go back home
     router.replace("/");
@@ -61,7 +67,7 @@ const SignIn: React.FC = (props) => {
       <div>
         <label>Password</label>
         <input
-          type="text"
+          type="password"
           id="Password"
           onChange={onChangeInputPasswordHandler}
           value={inputPassword}
