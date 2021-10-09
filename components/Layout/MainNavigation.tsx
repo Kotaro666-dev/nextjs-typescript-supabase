@@ -2,15 +2,22 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { useAuthDispatch } from "../../store/store";
+import { authActions } from "../../store/auth-slice";
 
 import classes from "./MainNavigation.module.css";
 
 const MainNavigation = () => {
   const router = useRouter();
+  const authDispatch = useAuthDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   const onLogoClickHandler = () => {
     router.push("/");
+  };
+
+  const logoutHandler = () => {
+    authDispatch(authActions.logout());
   };
 
   return (
@@ -23,7 +30,9 @@ const MainNavigation = () => {
         <ul>
           <li>{!isLoggedIn && <Link href="/signin">SignIn</Link>}</li>
           <li>{!isLoggedIn && <Link href="/signup">SignUp</Link>}</li>
-          <li>{isLoggedIn && <button>Logout</button>}</li>
+          <li>
+            {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
+          </li>
         </ul>
       </nav>
     </header>
