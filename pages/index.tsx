@@ -1,12 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "../components/helper/SupabaseClient";
 import { authActions } from "../store/auth-slice";
 import { useAuthDispatch, RootState } from "../store/store";
 import { useSelector } from "react-redux";
+import PostItem from "../components/posts/postItem";
+
+export type Post = {
+  id: string;
+  userName: string;
+  title: string;
+  body: string;
+  posted_at: string;
+};
 
 const HomePage = () => {
   const authDispatch = useAuthDispatch();
   const { isLoggedIn, idToken } = useSelector((state: RootState) => state.auth);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const getUserData = async (uid: string) => {
@@ -19,19 +29,52 @@ const HomePage = () => {
       }
     };
 
+    const getPosts = async () => {
+      const { data: posts, error } = await supabase.from("posts").select("*");
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (posts?.length === 0) {
+        return;
+      }
+      const newPosts: Array<Post> = [];
+      posts?.forEach((post) => {
+        const newPost: Post = {
+          id: post.id,
+          userName: post.uid,
+          title: post.title,
+          body: post.body,
+          posted_at: post.created_at as string,
+        };
+        newPosts.push(newPost);
+      });
+      setPosts(newPosts);
+    };
+
     const session = supabase.auth.session();
-    console.log(session);
     if (session) {
       const uid = session.user?.id as string;
       authDispatch(authActions.signIn(uid));
       getUserData(uid);
     }
+    getPosts();
   }, [authDispatch]);
 
   return (
     <div>
-      {isLoggedIn && <h1>{idToken}</h1>},
-      {!isLoggedIn && <h1>You are not loggedin</h1>}
+      {posts.length === 0 && <h1>No posts</h1>}
+      {posts.map((post) => {
+        return (
+          <PostItem
+            key={post.id}
+            title={post.title}
+            userName={post.userName}
+            body={post.body}
+            posted_at={post.posted_at}
+          />
+        );
+      })}
     </div>
   );
 };
