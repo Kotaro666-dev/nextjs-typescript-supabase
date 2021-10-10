@@ -51,9 +51,7 @@ const MainNavigation = () => {
           <li>
             {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
           </li>
-          <li>
-            {isLoggedIn && <div className={classes.profile}>{userName}</div>}
-          </li>
+          <li>{isLoggedIn && <Link href="/profile">Profile</Link>}</li>
         </ul>
       </nav>
     </header>
