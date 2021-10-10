@@ -1,4 +1,6 @@
-import { Post } from "../../pages";
+import React from "react";
+
+import classes from "./postItem.module.css";
 
 const PostItem: React.FC<{
   title: string;
@@ -7,15 +9,16 @@ const PostItem: React.FC<{
   posted_at: string;
 }> = (props) => {
   return (
-    <div>
-      <div>
-        <p>{props.title}</p>
-        <p>{props.userName}</p>
+    <div className={classes.card}>
+      <div className={classes.head}>
+        <p>
+          {props.title} by {props.userName}
+        </p>
       </div>
-      <div>
+      <div className={classes.body}>
         <p>{props.body}</p>
       </div>
-      <div>
+      <div className={classes.bottom}>
         <p>{props.posted_at}</p>
       </div>
     </div>

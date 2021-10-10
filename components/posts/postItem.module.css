@@ -1,0 +1,16 @@
+.card {
+  font: inherit;
+  padding: 0 1rem;
+  border-radius: 4px;
+  background-color: #f3eff5;
+  border: 1px solid #c3b2ce;
+  display: block;
+  width: 100%;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.card .bottom {
+  display: flex;
+  justify-content: end;
+}
