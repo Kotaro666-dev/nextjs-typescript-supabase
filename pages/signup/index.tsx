@@ -37,6 +37,14 @@ const SignUp: React.FC = () => {
 
       setIsLoading(false);
 
+      // Create Users data
+      const userData = {
+        uid: user?.id,
+        username: inputName,
+        email: inputEmail,
+      };
+      const { data } = await supabase.from("users").insert(userData);
+
       // Update store
       authDispatch(authActions.signUp(user?.id));
 
