@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../components/helper/SupabaseClient";
 import { authActions } from "../store/auth-slice";
-import { useAuthDispatch, RootState } from "../store/store";
-import { useSelector } from "react-redux";
+import { userActions } from "../store/user-slice";
+import { useAuthDispatch, useUserDispatch } from "../store/store";
 import PostItem from "../components/posts/postItem";
 
 export type Post = {
@@ -15,17 +15,23 @@ export type Post = {
 
 const HomePage = () => {
   const authDispatch = useAuthDispatch();
-  const { isLoggedIn, idToken } = useSelector((state: RootState) => state.auth);
+  const userDispatch = useUserDispatch();
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     const getUserData = async (uid: string) => {
-      const { data, error } = await supabase
+      const { data: users, error } = await supabase
         .from("users")
-        .select()
+        .select("*")
         .eq("uid", uid);
-      if (data) {
-        console.log(data);
+      if (users) {
+        const { username, email } = users[0];
+        userDispatch(
+          userActions.updateUser({
+            username: username,
+            email: email,
+          })
+        );
       }
     };
 
@@ -59,7 +65,7 @@ const HomePage = () => {
       getUserData(uid);
     }
     getPosts();
-  }, [authDispatch]);
+  }, [authDispatch, userDispatch]);
 
   return (
     <div>
