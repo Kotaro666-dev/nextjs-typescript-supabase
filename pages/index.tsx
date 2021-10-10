@@ -9,10 +9,22 @@ const HomePage = () => {
   const { isLoggedIn, idToken } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
+    const getUserData = async (uid: string) => {
+      const { data, error } = await supabase
+        .from("users")
+        .select()
+        .eq("uid", uid);
+      if (data) {
+        console.log(data);
+      }
+    };
+
     const session = supabase.auth.session();
     console.log(session);
     if (session) {
-      authDispatch(authActions.signIn(session.user?.id));
+      const uid = session.user?.id as string;
+      authDispatch(authActions.signIn(uid));
+      getUserData(uid);
     }
   }, [authDispatch]);
 
