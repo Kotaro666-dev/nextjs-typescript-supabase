@@ -2,7 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { useAuthDispatch } from "../../store/store";
+import { useAuthDispatch, useUserDispatch } from "../../store/store";
+import { userActions } from "../../store/user-slice";
 import { authActions } from "../../store/auth-slice";
 import { supabase } from "../helper/SupabaseClient";
 
@@ -11,7 +12,9 @@ import classes from "./MainNavigation.module.css";
 const MainNavigation = () => {
   const router = useRouter();
   const authDispatch = useAuthDispatch();
+  const userDispatch = useUserDispatch();
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const userName = useSelector((state: RootState) => state.user.username);
 
   const onLogoClickHandler = () => {
     router.push("/");
@@ -24,6 +27,14 @@ const MainNavigation = () => {
       return;
     }
     authDispatch(authActions.logout());
+    userDispatch(
+      userActions.updateUser({
+        payload: {
+          userName: "",
+          email: "",
+        },
+      })
+    );
   };
 
   return (
@@ -39,6 +50,9 @@ const MainNavigation = () => {
           <li>{isLoggedIn && <Link href="/new-post">Add new post</Link>}</li>
           <li>
             {isLoggedIn && <button onClick={logoutHandler}>Logout</button>}
+          </li>
+          <li>
+            {isLoggedIn && <div className={classes.profile}>{userName}</div>}
           </li>
         </ul>
       </nav>
