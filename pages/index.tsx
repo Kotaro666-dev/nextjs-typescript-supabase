@@ -4,6 +4,7 @@ import { authActions } from "../store/auth-slice";
 import { userActions } from "../store/user-slice";
 import { useAuthDispatch, useUserDispatch } from "../store/store";
 import PostItem from "../components/posts/postItem";
+import { convertTimestamptz } from "../components/helper/TimeStamptzConvertor";
 
 export type Post = {
   id: string;
@@ -51,11 +52,12 @@ const HomePage = () => {
           userName: post.uid,
           title: post.title,
           body: post.body,
-          posted_at: post.created_at as string,
+          posted_at: convertTimestamptz(post.created_at as string),
         };
         newPosts.push(newPost);
       });
-      setPosts(newPosts);
+      const updatedOrderPosts = newPosts.reverse();
+      setPosts(updatedOrderPosts);
     };
 
     const session = supabase.auth.session();
