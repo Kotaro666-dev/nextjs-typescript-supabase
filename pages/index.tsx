@@ -116,16 +116,16 @@ export const getStaticProps = async () => {
     const { data: posts, error } = await supabase.from("posts").select("*");
     if (error) {
       console.log(error);
-      return;
+      return [];
     }
     if (posts?.length === 0) {
-      return;
+      return [];
     }
     const newPosts: Array<Post> = [];
     posts?.forEach((post) => {
       const newPost: Post = {
         id: post.id,
-        userName: post.uid,
+        userName: post.username,
         title: post.title,
         body: post.body,
         posted_at: convertTimestamptz(post.created_at as string),

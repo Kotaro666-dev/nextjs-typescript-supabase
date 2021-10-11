@@ -12,6 +12,7 @@ const NewPost = () => {
   const [inputTitle, setInputTitle] = useState("");
   const [inputBody, setInputBody] = useState("");
   const { idToken } = useSelector((state: RootState) => state.auth);
+  const { username } = useSelector((state: RootState) => state.user);
   const router = useRouter();
 
   const addNewPost = async () => {
@@ -24,6 +25,7 @@ const NewPost = () => {
           title: inputTitle,
           body: inputBody,
           uid: idToken,
+          username: username,
         },
       ]);
       setIsLoading(false);
