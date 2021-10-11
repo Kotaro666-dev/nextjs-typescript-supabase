@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { supabase } from "../components/helper/SupabaseClient";
 import { authActions } from "../store/auth-slice";
 import { userActions } from "../store/user-slice";
@@ -94,7 +94,7 @@ const HomePage: React.FC<{ posts: Post[] }> = ({ posts }) => {
   // }, [authDispatch, userDispatch]);
 
   return (
-    <div>
+    <main>
       {posts.length === 0 && <h1>No posts</h1>}
       {posts.map((post) => {
         return (
@@ -107,7 +107,7 @@ const HomePage: React.FC<{ posts: Post[] }> = ({ posts }) => {
           />
         );
       })}
-    </div>
+    </main>
   );
 };
 
