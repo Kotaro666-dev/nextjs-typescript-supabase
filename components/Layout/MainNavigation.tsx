@@ -40,7 +40,7 @@ const MainNavigation = () => {
   return (
     <header className={classes.header}>
       <div onClick={onLogoClickHandler} className={classes.logo}>
-        Next js
+        Next - TypeScript - Supabase
       </div>
 
       <nav>
